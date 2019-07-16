@@ -67,15 +67,16 @@ extract(month from payment_date) as month,
 extract(year from payment_date) as year
 from payment;
 --10 
-select 
+select
 concat(first_name, ' ', last_name) as staff_name,
 md5(email) as email, 
 upper(city) as city,
 concat('[', split_part(email, '@', 1), ']-', length(md5(email))) as identifier
-from staff 
+from payment
+inner join staff using(staff_id)
 inner join address using (address_id) 
 inner join city using(city_id) 
-where email like 'M%@%com';
+where email like 'M%@%com' and payment_id > 10;
 -- 11
 select payment.customer_id, payment.payment_id, max_table.payment_date 
 from payment 
@@ -98,7 +99,7 @@ left join inventory using(film_id)
 where inventory_id is null offset 49 fetch first 51 rows only;
 --14
 select typname as enum_name, enumlabel as enum_value, rating from pg_enum inner join pg_type on pg_type.oid = pg_enum.enumtypid left join (select rating from film group by rating) as ratings on(cast(ratings.rating as varchar) = pg_enum.enumlabel) where ratings.rating is null;
-
+--15
 												
 														
 														
